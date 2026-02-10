@@ -1,0 +1,41 @@
+import fs from 'fs-extra';
+import path from 'path';
+
+export async function createDirectory(dirPath: string): Promise<void> {
+  await fs.ensureDir(dirPath);
+}
+
+export async function writeFile(filePath: string, content: string): Promise<void> {
+  await fs.ensureDir(path.dirname(filePath));
+  await fs.writeFile(filePath, content, 'utf-8');
+}
+
+export async function copyTemplate(
+  sourceDir: string,
+  targetDir: string,
+  variables: Record<string, any>
+): Promise<void> {
+  const files = await fs.readdir(sourceDir, { recursive: true });
+
+  for (const file of files) {
+    const sourcePath = path.join(sourceDir, file);
+    const targetPath = path.join(targetDir, file);
+
+    const stat = await fs.stat(sourcePath);
+
+    if (stat.isDirectory()) {
+      await createDirectory(targetPath);
+    } else {
+      // For template files, process with variables
+      if (file.endsWith('.ejs')) {
+        const content = await fs.readFile(sourcePath, 'utf-8');
+        const processed = content.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+          return variables[key] !== undefined ? String(variables[key]) : match;
+        });
+        await writeFile(targetPath.replace('.ejs', ''), processed);
+      } else {
+        await fs.copy(sourcePath, targetPath);
+      }
+    }
+  }
+}
