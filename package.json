@@ -1,19 +1,48 @@
 {
   "name": "archestra-mcp-init",
   "version": "1.0.0",
-  "description": "Generate production-ready MCP servers with Archestra-native patterns",
+  "description": "Generate production-ready MCP servers with Archestra-native security and observability patterns",
   "main": "dist/index.js",
   "bin": {
     "archestra-mcp-init": "dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": ["mcp", "archestra", "ai", "server", "generator"],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kartikgarg74/archestra-mcp-init.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kartikgarg74/archestra-mcp-init/issues"
+  },
+  "homepage": "https://github.com/Kartikgarg74/archestra-mcp-init#readme",
+  "keywords": [
+    "mcp",
+    "archestra",
+    "ai",
+    "server",
+    "generator",
+    "cli",
+    "model-context-protocol",
+    "security",
+    "observability",
+    "typescript",
+    "python"
+  ],
+  "author": "Kartik Garg",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "commander": "^11.1.0",
     "ejs": "^3.1.9",
