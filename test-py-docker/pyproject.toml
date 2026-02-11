@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "test-py-docker"
+version = "1.0.0"
+description = "An Archestra-native MCP server"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Kartik Garg"}]
+keywords = ["mcp", "archestra", "ai"]
+
+dependencies = [
+    "fastmcp>=1.0.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "prometheus-client>=0.19.0",
+    "structlog>=24.1.0",
+    "requests>=2.31.0"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4.0", "pytest-asyncio>=0.21.0", "black>=23.0.0", "mypy>=1.7.0"]
+
+[project.scripts]
+test-py-docker = "src.server:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}

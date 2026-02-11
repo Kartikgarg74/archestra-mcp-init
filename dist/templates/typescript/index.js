@@ -12,6 +12,8 @@ const tools_1 = require("./tools");
 const security_1 = require("./security");
 const observability_1 = require("./observability");
 const docs_1 = require("./docs");
+const cicd_1 = require("./cicd");
+const docker_1 = require("./docker");
 async function generateTypeScriptProject(projectPath, config) {
     // Create directory structure
     const dirs = [
@@ -31,6 +33,17 @@ async function generateTypeScriptProject(projectPath, config) {
     // Generate source files
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/server.ts'), (0, server_1.generateServerFile)(config));
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/exampleTool.ts'), (0, tools_1.generateExampleTool)(config));
+    // Generate CI/CD workflows
+    await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, '.github/workflows/ci.yml'), (0, cicd_1.generateGitHubActionsCI)());
+    await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, '.github/workflows/cd.yml'), (0, cicd_1.generateGitHubActionsCD)());
+    await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, '.github/workflows/release.yml'), (0, cicd_1.generateGitHubActionsRelease)());
+    // Generate Docker files
+    await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'Dockerfile'), (0, docker_1.generateDockerfile)(config));
+    await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'docker-compose.yml'), (0, docker_1.generateDockerCompose)(config));
+    await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, '.dockerignore'), (0, docker_1.generateDockerIgnore)());
+    if (config.includeObservability) {
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'prometheus.yml'), (0, docker_1.generatePrometheusConfig)());
+    }
     // Generate optional modules
     if (config.includeSecurity) {
         await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/security/archestraSecurity.ts'), (0, security_1.generateSecurityModule)());

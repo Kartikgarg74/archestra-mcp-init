@@ -6,7 +6,17 @@ import { generatePythonExampleTool } from './tools';
 import { generatePythonSecurityModule } from './security';
 import { generatePythonMetricsModule, generatePythonLoggerModule } from './observability';
 import { generatePythonReadme, generatePythonGitignore, generatePythonEnvExample } from './docs';
-
+import {
+  generatePythonGitHubActionsCI,
+  generatePythonGitHubActionsCD,
+  generatePythonGitHubActionsRelease
+} from './cicd';
+import {
+  generatePythonDockerfile,
+  generatePythonDockerCompose,
+  generatePythonDockerIgnore,
+  generatePythonPrometheusConfig
+} from './docker';
 export interface PythonProjectConfig {
   name: string;
   description: string;
@@ -26,14 +36,6 @@ export async function generatePythonProject(projectPath: string, config: PythonP
   await writeFile(path.join(projectPath, 'requirements.txt'), generateRequirements(config));
   await writeFile(path.join(projectPath, 'src/server.py'), generatePythonServer(config));
   await writeFile(path.join(projectPath, 'src/tools/example_tool.py'), generatePythonExampleTool(config));
-
-  if (config.includeSecurity) {
-    await writeFile(
-      path.join(projectPath, 'src/security/archestra_security.py'),
-      generatePythonSecurityModule()
-    );
-  }
-
   if (config.includeObservability) {
     await writeFile(
       path.join(projectPath, 'src/observability/metrics.py'),
@@ -44,7 +46,26 @@ export async function generatePythonProject(projectPath: string, config: PythonP
       generatePythonLoggerModule()
     );
   }
+  // Generate CI/CD workflows
+  await writeFile(path.join(projectPath, '.github/workflows/ci.yml'), generatePythonGitHubActionsCI());
+  await writeFile(path.join(projectPath, '.github/workflows/cd.yml'), generatePythonGitHubActionsCD());
+  await writeFile(path.join(projectPath, '.github/workflows/release.yml'), generatePythonGitHubActionsRelease());
 
+  if (config.includeSecurity) {
+    await writeFile(
+      path.join(projectPath, 'src/security/archestra_security.py'),
+      generatePythonSecurityModule()
+    );
+  }
+
+  // Generate Docker files
+  await writeFile(path.join(projectPath, 'Dockerfile'), generatePythonDockerfile(config));
+  await writeFile(path.join(projectPath, 'docker-compose.yml'), generatePythonDockerCompose(config));
+  await writeFile(path.join(projectPath, '.dockerignore'), generatePythonDockerIgnore());
+
+  if (config.includeObservability) {
+    await writeFile(path.join(projectPath, 'prometheus.yml'), generatePythonPrometheusConfig());
+  }
   await writeFile(path.join(projectPath, 'README.md'), generatePythonReadme(config));
   await writeFile(path.join(projectPath, '.gitignore'), generatePythonGitignore());
   await writeFile(path.join(projectPath, '.env.example'), generatePythonEnvExample());
