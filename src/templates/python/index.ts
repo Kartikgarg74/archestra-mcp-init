@@ -2,7 +2,13 @@ import path from 'path';
 import { writeFile } from '../../utils/fileGenerator';
 import { generatePyProjectToml, generateRequirements } from './config';
 import { generatePythonServer } from './server';
-import { generatePythonExampleTool } from './tools';
+import {
+  generatePythonExampleTool,
+  generatePythonApiTool,
+  generatePythonFileTool,
+  generatePythonDatabaseTool,
+  generatePythonToolsInit
+} from './tools';
 import { generatePythonSecurityModule } from './security';
 import { generatePythonMetricsModule, generatePythonLoggerModule } from './observability';
 import { generatePythonReadme, generatePythonGitignore, generatePythonEnvExample } from './docs';
@@ -36,6 +42,13 @@ export async function generatePythonProject(projectPath: string, config: PythonP
   await writeFile(path.join(projectPath, 'requirements.txt'), generateRequirements(config));
   await writeFile(path.join(projectPath, 'src/server.py'), generatePythonServer(config));
   await writeFile(path.join(projectPath, 'src/tools/example_tool.py'), generatePythonExampleTool(config));
+    // Generate additional tools
+  if (config.includeSecurity || config.includeObservability) {
+    await writeFile(path.join(projectPath, 'src/tools/api_tool.py'), generatePythonApiTool(config));
+    await writeFile(path.join(projectPath, 'src/tools/file_tool.py'), generatePythonFileTool(config));
+    await writeFile(path.join(projectPath, 'src/tools/database_tool.py'), generatePythonDatabaseTool(config));
+    await writeFile(path.join(projectPath, 'src/tools/__init__.py'), generatePythonToolsInit(config));
+  }
   if (config.includeObservability) {
     await writeFile(
       path.join(projectPath, 'src/observability/metrics.py'),

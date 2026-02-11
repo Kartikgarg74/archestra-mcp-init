@@ -33,6 +33,13 @@ async function generateTypeScriptProject(projectPath, config) {
     // Generate source files
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/server.ts'), (0, server_1.generateServerFile)(config));
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/exampleTool.ts'), (0, tools_1.generateExampleTool)(config));
+    // Generate additional tools
+    if (config.includeSecurity || config.includeObservability) {
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/apiTool.ts'), (0, tools_1.generateApiTool)(config));
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/fileTool.ts'), (0, tools_1.generateFileTool)(config));
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/databaseTool.ts'), (0, tools_1.generateDatabaseTool)(config));
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/index.ts'), (0, tools_1.generateIndexFile)(config));
+    }
     // Generate CI/CD workflows
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, '.github/workflows/ci.yml'), (0, cicd_1.generateGitHubActionsCI)());
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, '.github/workflows/cd.yml'), (0, cicd_1.generateGitHubActionsCD)());

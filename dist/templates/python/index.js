@@ -23,6 +23,13 @@ async function generatePythonProject(projectPath, config) {
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'requirements.txt'), (0, config_1.generateRequirements)(config));
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/server.py'), (0, server_1.generatePythonServer)(config));
     await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/example_tool.py'), (0, tools_1.generatePythonExampleTool)(config));
+    // Generate additional tools
+    if (config.includeSecurity || config.includeObservability) {
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/api_tool.py'), (0, tools_1.generatePythonApiTool)(config));
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/file_tool.py'), (0, tools_1.generatePythonFileTool)(config));
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/database_tool.py'), (0, tools_1.generatePythonDatabaseTool)(config));
+        await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/tools/__init__.py'), (0, tools_1.generatePythonToolsInit)(config));
+    }
     if (config.includeObservability) {
         await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/observability/metrics.py'), (0, observability_1.generatePythonMetricsModule)());
         await (0, fileGenerator_1.writeFile)(path_1.default.join(projectPath, 'src/observability/logger.py'), (0, observability_1.generatePythonLoggerModule)());

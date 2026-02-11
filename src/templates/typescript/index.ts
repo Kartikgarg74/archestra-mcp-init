@@ -2,7 +2,13 @@ import path from 'path';
 import { writeFile } from '../../utils/fileGenerator';
 import { generatePackageJson, generateTsConfig } from './config';
 import { generateServerFile } from './server';
-import { generateExampleTool } from './tools';
+import {
+  generateExampleTool,
+  generateApiTool,
+  generateFileTool,
+  generateDatabaseTool,
+  generateIndexFile
+} from './tools';
 import { generateSecurityModule } from './security';
 import { generateMetricsModule, generateLoggerModule } from './observability';
 import { generateReadme, generateArchestraGuide, generateGitignore, generateEnvExample } from './docs';
@@ -47,6 +53,13 @@ export async function generateTypeScriptProject(projectPath: string, config: Pro
   // Generate source files
   await writeFile(path.join(projectPath, 'src/server.ts'), generateServerFile(config));
   await writeFile(path.join(projectPath, 'src/tools/exampleTool.ts'), generateExampleTool(config));
+    // Generate additional tools
+  if (config.includeSecurity || config.includeObservability) {
+    await writeFile(path.join(projectPath, 'src/tools/apiTool.ts'), generateApiTool(config));
+    await writeFile(path.join(projectPath, 'src/tools/fileTool.ts'), generateFileTool(config));
+    await writeFile(path.join(projectPath, 'src/tools/databaseTool.ts'), generateDatabaseTool(config));
+    await writeFile(path.join(projectPath, 'src/tools/index.ts'), generateIndexFile(config));
+  }
   // Generate CI/CD workflows
   await writeFile(path.join(projectPath, '.github/workflows/ci.yml'), generateGitHubActionsCI());
   await writeFile(path.join(projectPath, '.github/workflows/cd.yml'), generateGitHubActionsCD());

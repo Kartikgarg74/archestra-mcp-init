@@ -1,0 +1,11 @@
+fastmcp>=1.0.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+prometheus-client>=0.19.0
+structlog>=24.1.0
+requests>=2.31.0
+
+# Development
+pytest>=7.4.0
+black>=23.0.0
+mypy>=1.7.0
