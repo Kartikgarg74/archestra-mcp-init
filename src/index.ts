@@ -3,7 +3,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { generateCommand } from './commands/generate';
-
+import { addToolCommand } from './commands/addTool.js';
 const program = new Command();
 
 program
@@ -31,7 +31,14 @@ program
     console.log(chalk.green('  • python') + chalk.gray(' - Python with FastMCP\n'));
     console.log(chalk.yellow('Usage: archestra-mcp-init generate -l typescript\n'));
   });
-
+program
+  .command('add-tool')
+  .alias('tool')
+  .description('Add a new tool to an existing MCP server project')
+  .option('-n, --name <name>', 'Tool name (camelCase)')
+  .option('-t, --template <template>', 'Template (api-call|file-operation|database-query|custom)')
+  .option('-l, --language <lang>', 'Language (typescript|python)')
+  .action(addToolCommand);
 // Default help
 if (process.argv.length === 2) {
   program.help();

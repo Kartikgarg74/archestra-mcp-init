@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const chalk_1 = __importDefault(require("chalk"));
 const generate_1 = require("./commands/generate");
+const addTool_js_1 = require("./commands/addTool.js");
 const program = new commander_1.Command();
 program
     .name('archestra-mcp-init')
@@ -31,6 +32,14 @@ program
     console.log(chalk_1.default.green('  • python') + chalk_1.default.gray(' - Python with FastMCP\n'));
     console.log(chalk_1.default.yellow('Usage: archestra-mcp-init generate -l typescript\n'));
 });
+program
+    .command('add-tool')
+    .alias('tool')
+    .description('Add a new tool to an existing MCP server project')
+    .option('-n, --name <name>', 'Tool name (camelCase)')
+    .option('-t, --template <template>', 'Template (api-call|file-operation|database-query|custom)')
+    .option('-l, --language <lang>', 'Language (typescript|python)')
+    .action(addTool_js_1.addToolCommand);
 // Default help
 if (process.argv.length === 2) {
     program.help();
